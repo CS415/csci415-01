@@ -54,7 +54,7 @@ __global__ void sine_parallel(float *input, float *output)
   /*
   creates a thread_id for each thread based upon its position in every block.
   block_size defined at 1024.  
-  this statement assigns every thread a value 0-(N-1) that will access its corresponding array at its id.
+  this statement assigns every thread a value 0-(N-1) that will access its corresponding element of the array at the id.
   */
   int thread_id = blockIdx.x * block_size + threadIdx.x;
 	

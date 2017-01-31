@@ -45,7 +45,9 @@ void sine_serial(float *input, float *output)
 
 // kernel function (CUDA device)
 // TODO: Implement your graphics kernel here. See assignment instructions for method information
-
+__global__ void sine_parallel(float *input, float *output){
+	
+}
 // BEGIN: timing and error checking routines (do not modify)
 
 // Returns the current time in microseconds
@@ -114,7 +116,16 @@ int main (int argc, char **argv)
 
   //TODO: Prepare and run your kernel, make sure to copy your results back into h_gpu_result and display your timing results
   float *h_gpu_result = (float*)malloc(N*sizeof(float));
-
+  float *d_input = (float*)malloc(N*sizeof(float));
+  //Initialize data on GPU
+  int d;
+  for (d=0; d<N; d++)
+  {
+    d_input[d] = 0.1f * d;
+  }
+  long long GPU_start_time = start_timer();
+  sine_parallel(d_input, h_gpu_result);
+  long long GPU_time = stop_timer(GPU_start_time, "\nGPU Run Time");
   // Checking to make sure the CPU and GPU results match - Do not modify
   int errorCount = 0;
   for (i=0; i<N; i++)

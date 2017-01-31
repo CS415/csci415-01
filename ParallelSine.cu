@@ -143,8 +143,13 @@ int main (int argc, char **argv)
   cudaMemcpy(d_input, h_input, sizeof(&h_input), cudaMemcpyHostToDevice);	
 	
   long long GPU_start_time = start_timer();
-  sine_parallel <<<(N/block_size),block_size>>>(h_input, h_gpu_result);
+  sine_parallel <<<(N/block_size + 1),block_size>>>(h_input, h_gpu_result);
+  cudaThreadSynchronize();
   long long GPU_time = stop_timer(GPU_start_time, "\nGPU Run Time");
+  
+  cudaMemcpy(h_gpu_result, d_output, sizeof(&h_input), cudaMemcpyDeviceToHost);
+
+	
   // Checking to make sure the CPU and GPU results match - Do not modify
   int errorCount = 0;
   for (i=0; i<N; i++)

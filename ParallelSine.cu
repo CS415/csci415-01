@@ -54,18 +54,18 @@ __global__ void sine_parallel(float *input, float *output){
   int thread_id = blockIdx.x * block_size + threadIdx.x;
 
   for (i=0; i<N; i++) {
-      float value = input[i]; 
-      float numer = input[i] * input[i] * input[i]; 
+      float value = input[thread_id]; 
+      float numer = input[thread_id] * input[thread_id] * input[thread_id]; 
       int denom = 6; // 3! 
       int sign = -1; 
       for (int j=1; j<=TERMS;j++) 
       { 
          value += sign * numer / denom; 
-         numer *= input[i] * input[i]; 
+         numer *= input[thread_id] * input[thread_id]; 
          denom *= (2*j+2) * (2*j+3); 
          sign *= -1; 
       } 
-      output[i] = value; 
+      output[thread_id] = value; 
     }
 }
 // BEGIN: timing and error checking routines (do not modify)

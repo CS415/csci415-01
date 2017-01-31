@@ -116,7 +116,10 @@ int main (int argc, char **argv)
 
   //TODO: Prepare and run your kernel, make sure to copy your results back into h_gpu_result and display your timing results
   float *h_gpu_result = (float*)malloc(N*sizeof(float));
-
+  if(cudaMalloc( (void **) &d_input, sizeof(&h_input))   != cudeSuccess ) die("Error allocating GPU memory");
+  if(cudaMalloc( (void **) &d_output, sizeof(&h_input))   != cudeSuccess ) die("Error allocating GPU memory");
+	
+	
   long long GPU_start_time = start_timer();
   sine_parallel(h_input, h_gpu_result);
   long long GPU_time = stop_timer(GPU_start_time, "\nGPU Run Time");

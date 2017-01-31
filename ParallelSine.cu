@@ -47,26 +47,40 @@ void sine_serial(float *input, float *output)
 // TODO: Implement your graphics kernel here. See assignment instructions for method information
 const int block_size = 1024;
 
-__global__ void sine_parallel(float *input, float *output){
+__global__ void sine_parallel(float *input, float *output)
+{
   
-	/*BELOW NEEDS TO BE CHANGED ERMAGERD*/
 	
+  /*
+  creates a thread_id for each thread based upon its position in every block.
+  block_size defined at 1024.  
+  this statement assigns every thread a value 0-(N-1) that will access its corresponding array at its id.
+  */
   int thread_id = blockIdx.x * block_size + threadIdx.x;
-
-  for (i=0; i<N; i++) {
-      float value = input[thread_id]; 
-      float numer = input[thread_id] * input[thread_id] * input[thread_id]; 
-      int denom = 6; // 3! 
-      int sign = -1; 
-      for (int j=1; j<=TERMS;j++) 
-      { 
-         value += sign * numer / denom; 
-         numer *= input[thread_id] * input[thread_id]; 
-         denom *= (2*j+2) * (2*j+3); 
-         sign *= -1; 
-      } 
-      output[thread_id] = value; 
-    }
+	
+	
+      /*
+      This if-else statement is meant to prevent accesses past the end of the array.
+      */
+      if(thread_id =< N)
+      {
+	  float value = input[thread_id]; 
+          float numer = input[thread_id] * input[thread_id] * input[thread_id]; 
+          int denom = 6; // 3! 
+      	  int sign = -1; 
+          for (int j=1; j<=TERMS;j++) 
+          { 
+               value += sign * numer / denom; 
+               numer *= input[thread_id] * input[thread_id]; 
+               denom *= (2*j+2) * (2*j+3); 
+               sign *= -1; 
+          } 
+          output[thread_id] = value; 
+      }
+      else
+      {
+      
+      }    
 }
 // BEGIN: timing and error checking routines (do not modify)
 

@@ -140,6 +140,8 @@ int main (int argc, char **argv)
   if(cudaMalloc( (void **) &d_output, sizeof(&h_input))   != cudeSuccess ) die("Error allocating GPU memory");
 	
 	
+  cudaMemcpy(d_input, h_input, sizeof(&h_input), cudaMemcpyHostToDevice);	
+	
   long long GPU_start_time = start_timer();
   sine_parallel <<<(N/block_size),block_size>>>(h_input, h_gpu_result);
   long long GPU_time = stop_timer(GPU_start_time, "\nGPU Run Time");

@@ -45,11 +45,13 @@ void sine_serial(float *input, float *output)
 
 // kernel function (CUDA device)
 // TODO: Implement your graphics kernel here. See assignment instructions for method information
+const int block_size = 1024;
+
 __global__ void sine_parallel(float *input, float *output){
   
 	/*BELOW NEEDS TO BE CHANGED ERMAGERD*/
 	
-  int i;
+  int thread_id = blockIdx.x * block_size + threadIdx.x;
 
   for (i=0; i<N; i++) {
       float value = input[i]; 
@@ -139,7 +141,7 @@ int main (int argc, char **argv)
 	
 	
   long long GPU_start_time = start_timer();
-  sine_parallel(h_input, h_gpu_result);
+  sine_parallel <<<(N/block_size),block_size>>>(h_input, h_gpu_result);
   long long GPU_time = stop_timer(GPU_start_time, "\nGPU Run Time");
   // Checking to make sure the CPU and GPU results match - Do not modify
   int errorCount = 0;

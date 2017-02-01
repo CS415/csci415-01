@@ -79,7 +79,8 @@ __global__ void sine_parallel(float *input, float *output)
       }
       else
       {
-      
+	  //die ("Thread_id greater than N value. No calculation to run.");
+	  //Could probably leave this Else() empty so the thread just does nothing.
       }    
 }
 // BEGIN: timing and error checking routines (do not modify)

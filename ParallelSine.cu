@@ -143,8 +143,10 @@ int main (int argc, char **argv)
   float *h_cpu_result = (float*)malloc(N*sizeof(float));
   float *h_input = (float*)malloc(N*sizeof(float));
 
-  float *d_input = (float*)malloc(N*sizeof(float));
-  float *d_output = (float*)malloc(N*sizeof(float));
+  //float *d_input = (float*)malloc(N*sizeof(float));
+  //float *d_output = (float*)malloc(N*sizeof(float));
+  float *d_input;
+  float *d_output;	
   //Initialize data on CPU
   int i;
   for (i=0; i<N; i++)
@@ -201,13 +203,21 @@ int main (int argc, char **argv)
   
   // Checking to make sure the CPU and GPU results match - Do not modify
   int errorCount = 0;
+  int cpusum = 0;
+  int gpusum = 0;
   for (i=0; i<N; i++)
   {
     if (abs(h_cpu_result[i]-h_gpu_result[i]) > 1e-6)
       errorCount = errorCount + 1;
+    cpusum += h_cpu_result[i];
+    gpusum += h_gpu_result[i];
   }
   if (errorCount > 0)
+  {
+    printf("CPU result sum: %d", cpusum);
+    printf("GPU result sum: %d", gpusum);
     printf("Result comparison failed.\n Total Errors: %d\n", errorCount);
+  }
   else
     printf("Result comparison passed.\n");
 

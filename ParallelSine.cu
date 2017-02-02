@@ -202,8 +202,8 @@ int main (int argc, char **argv)
   
   // Checking to make sure the CPU and GPU results match - Do not modify
   int errorCount = 0;
-  float cpusum = 0f;
-  float gpusum = 0f;
+  float cpusum = 0.0f;
+  float gpusum = 0.0f;
   for (i=0; i<N; i++)
   {
     if (abs(h_cpu_result[i]-h_gpu_result[i]) > 1e-6)

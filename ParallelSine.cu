@@ -46,11 +46,15 @@ void sine_serial(float *input, float *output)
 // kernel function (CUDA device)
 // TODO: Implement your graphics kernel here. See assignment instructions for method information
 const int block_size = 1024;
-
+// typedef struct{
+//  int N;
+// }
 __global__ void sine_parallel(float *input, float *output)
 {
-  
-	
+// if this does not work HOW we want there is an example of this here: http://15418.courses.cs.cmu.edu/spring2016/lecture/basicarch/slide_018  
+//   pthread_t thread_id;
+//   my_args args;
+//   args.N = N/2;
   /*
   creates a thread_id for each thread based upon its position in every block.
   block_size defined at 1024.  
@@ -62,6 +66,7 @@ __global__ void sine_parallel(float *input, float *output)
       /*
       This if-else statement is meant to prevent accesses past the end of the array.
       */
+     //WE MIGHT WANT TO CONSIDER USING A FORALL LOOP HERE FOR A DATA-PARALLEL EXAMPLE?
       if(thread_id =< N)
       {
 	  float value = input[thread_id]; 
@@ -150,21 +155,37 @@ int main (int argc, char **argv)
 
 
   //TODO: Prepare and run your kernel, make sure to copy your results back into h_gpu_result and display your timing results
+   
+  //timer to calculate total GPU run time	
+  long long Total_GPU_run_Time= start_timer();
+	
+   //timer for memory allocation	
+  long long GPU_mem_allocation = start_timer();
   float *h_gpu_result = (float*)malloc(N*sizeof(float));
   if(cudaMalloc( (void **) &d_input, sizeof(&h_input))   != cudeSuccess ) die("Error allocating GPU memory");
   if(cudaMalloc( (void **) &d_output, sizeof(&h_input))   != cudeSuccess ) die("Error allocating GPU memory");
-	
-	
+  long long GPU_mem_allocatoin_result = stop_timer(GPU_mem_allocation, "\nGPU Memory Allocation");	
+  
+  //timer for memory copy to device
+  long long GPU_copy_to_device = start_timer();
   cudaMemcpy(d_input, h_input, sizeof(&h_input), cudaMemcpyHostToDevice);	
+  long long GPU_mem_allocatoin_result = stop_timer(GPU_copy_to_device, "\nGPU Memory Copy to Device");
 	
+  //timer and execution of our GPU Kernel	
   long long GPU_start_time = start_timer();
   sine_parallel <<<(N/block_size + 1),block_size>>>(h_input, h_gpu_result);
   cudaThreadSynchronize();
-  long long GPU_time = stop_timer(GPU_start_time, "\nGPU Run Time");
+  long long GPU_time = stop_timer(GPU_start_time, "\nGPU Kernel Run Time");
   
+  //timer for memory copy back to host
+  long long GPU_copy_to_host = start_timer();
   cudaMemcpy(h_gpu_result, d_output, sizeof(&h_input), cudaMemcpyDeviceToHost);
-
+  long long GPU_tohost_copy_result = stop_timer(GPU_copy_to_host, "\nGPU Memory Copy to Host");
 	
+  //printing total GPU run time
+  long long Result_of_GPU_run_time = stop_timer(Total_GPU_run_Time, "\nTotal GPU Run Time");
+  
+  
   // Checking to make sure the CPU and GPU results match - Do not modify
   int errorCount = 0;
   for (i=0; i<N; i++)

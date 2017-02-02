@@ -67,8 +67,9 @@ __global__ void sine_parallel(float *input, float *output)
       This if-else statement is meant to prevent accesses past the end of the array.
       */
       //WE MIGHT WANT TO CONSIDER USING A FORALL LOOP HERE FOR A DATA-PARALLEL EXAMPLE?
-      //if(thread_id =< N)
-      forall(thread_id from 0 to N-1)
+      if(thread_id =< N)
+      //forall(thread_id from 0 to N-1)
+      if(thread_id =< N)
       {
 	  float value = input[thread_id]; 
           float numer = input[thread_id] * input[thread_id] * input[thread_id]; 
@@ -83,13 +84,11 @@ __global__ void sine_parallel(float *input, float *output)
           } 
           output[thread_id] = value; 
       }
-      /*
       else
       {
 	  //die ("Thread_id greater than N value. No calculation to run.");
 	  //Could probably leave this Else() empty so the thread just does nothing.
       }
-      */   
 }
 // BEGIN: timing and error checking routines (do not modify)
 

@@ -202,8 +202,8 @@ int main (int argc, char **argv)
   
   // Checking to make sure the CPU and GPU results match - Do not modify
   int errorCount = 0;
-  int cpusum = 0;
-  int gpusum = 0;
+  float cpusum = 0f;
+  float gpusum = 0f;
   for (i=0; i<N; i++)
   {
     if (abs(h_cpu_result[i]-h_gpu_result[i]) > 1e-6)
@@ -213,8 +213,8 @@ int main (int argc, char **argv)
   }
   if (errorCount > 0)
   {
-    printf("CPU result sum: %d\n", cpusum);
-    printf("GPU result sum: %d\n", gpusum);
+    printf("CPU result sum: %f\n", cpusum);
+    printf("GPU result sum: %f\n", gpusum);
     printf("Result comparison failed.\n Total Errors: %d\n", errorCount);
   }
   else

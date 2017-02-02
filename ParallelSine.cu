@@ -186,7 +186,7 @@ int main (int argc, char **argv)
 	
   //timer and execution of our GPU Kernel	
   long long GPU_start_time = start_timer();
-  sine_parallel <<<(N/block_size + 1),block_size>>>(h_input, h_gpu_result);
+  sine_parallel <<<(N/block_size + 1),block_size>>>(d_input, d_output);
   cudaThreadSynchronize();
   long long GPU_time = stop_timer(GPU_start_time, "\nGPU Kernel Run Time");
   

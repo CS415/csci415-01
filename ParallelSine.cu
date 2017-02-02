@@ -182,7 +182,7 @@ int main (int argc, char **argv)
   //timer for memory copy to device
   long long GPU_copy_to_device = start_timer();
   cudaMemcpy(d_input, h_input, sizeof(&h_input), cudaMemcpyHostToDevice);	
-  long long GPU_mem_allocatoin_result = stop_timer(GPU_copy_to_device, "\nGPU Memory Copy to Device");
+  long long GPU_memcpy_allocatoin_result = stop_timer(GPU_copy_to_device, "\nGPU Memory Copy to Device");
 	
   //timer and execution of our GPU Kernel	
   long long GPU_start_time = start_timer();

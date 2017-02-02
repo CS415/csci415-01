@@ -164,8 +164,16 @@ int main (int argc, char **argv)
    //timer for memory allocation	
   long long GPU_mem_allocation = start_timer();
   float *h_gpu_result = (float*)malloc(N*sizeof(float));
-  if(cudaMalloc( (void **) &d_input, sizeof(&h_input))   != cudeSuccess ) die("Error allocating GPU memory");
-  if(cudaMalloc( (void **) &d_output, sizeof(&h_input))   != cudeSuccess ) die("Error allocating GPU memory");
+  if(cudaMalloc( (void **) &d_input, sizeof(&h_input))   != cudaSuccess ) 
+  {
+	std::cerr<< "Memory could not be allocated on GPU";	  
+	  exit(1);
+  }
+  if(cudaMalloc( (void **) &d_output, sizeof(&h_input))   != cudaSuccess )
+  {
+	std::cerr<< "Memory could not be allocated on GPU";	  
+	  exit(1);	  
+  }
   long long GPU_mem_allocatoin_result = stop_timer(GPU_mem_allocation, "\nGPU Memory Allocation");	
   
   //timer for memory copy to device

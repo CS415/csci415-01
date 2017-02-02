@@ -69,7 +69,7 @@ __global__ void sine_parallel(float *input, float *output)
       //WE MIGHT WANT TO CONSIDER USING A FORALL LOOP HERE FOR A DATA-PARALLEL EXAMPLE?
       
       //forall(thread_id from 0 to N-1)
-      if(thread_id =< N)
+      if(thread_id <= N)
       {
 	  float value = input[thread_id]; 
           float numer = input[thread_id] * input[thread_id] * input[thread_id]; 

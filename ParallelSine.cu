@@ -51,10 +51,6 @@ const int block_size = 1024;
 // }
 __global__ void sine_parallel(float *input, float *output)
 {
-// if this does not work HOW we want there is an example of this here: http://15418.courses.cs.cmu.edu/spring2016/lecture/basicarch/slide_018  
-//   pthread_t thread_id;
-//   my_args args;
-//   args.N = N/2;
   /*
   creates a thread_id for each thread based upon its position in every block.
   block_size defined at 1024.  
@@ -66,9 +62,6 @@ __global__ void sine_parallel(float *input, float *output)
       /*
       This if-else statement is meant to prevent accesses past the end of the array.
       */
-      //WE MIGHT WANT TO CONSIDER USING A FORALL LOOP HERE FOR A DATA-PARALLEL EXAMPLE?
-      
-      //forall(thread_id from 0 to N-1)
       if(thread_id <= N)
       {
 	  float value = input[thread_id]; 
@@ -86,8 +79,6 @@ __global__ void sine_parallel(float *input, float *output)
       }
       else
       {
-	  //die ("Thread_id greater than N value. No calculation to run.");
-	  //Could probably leave this Else() empty so the thread just does nothing.
       }
 }
 // BEGIN: timing and error checking routines (do not modify)
@@ -139,13 +130,18 @@ void checkErrors(const char label[])
 
 int main (int argc, char **argv)
 {
-  //BEGIN: CPU implementation (do not modify)
+  
+  /*
+   Declaration of variables	
+  */
   float *h_cpu_result = (float*)malloc(N*sizeof(float));
   float *h_input = (float*)malloc(N*sizeof(float));
   float *h_gpu_result = (float*)malloc(N*sizeof(float));
 
   float *d_input;
-  float *d_output;
+  float *d_output;	
+  //BEGIN: CPU implementation (do not modify)
+  
  	
   //Initialize data on CPU
   int i;
@@ -171,18 +167,6 @@ int main (int argc, char **argv)
   cudaMalloc(&d_input,N*sizeof(float));
   cudaMalloc(&d_output,N*sizeof(float));   
   
-/*	    
-  if(cudaMalloc(&d_input, sizeof(&h_input))   != cudaSuccess ) 
-  {
-	std::cerr<< "Memory could not be allocated on GPU";	  
-	  exit(1);
-  }
-  if(cudaMalloc(&d_output, sizeof(&h_input))   != cudaSuccess )
-  {
-	std::cerr<< "Memory could not be allocated on GPU";	  
-	  exit(1);	  
-  }
-*/
   long long GPU_mem_allocation_result = stop_timer(GPU_mem_allocation, "\nGPU Memory Allocation");	
   
   //timer for memory copy to device

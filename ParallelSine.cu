@@ -168,8 +168,8 @@ int main (int argc, char **argv)
 	
    //timer for memory allocation	
   long long GPU_mem_allocation = start_timer();
-  cudaMalloc(&d_input, sizeof(&h_input));
-  cudaMalloc(&d_output, sizeof(&h_input));   
+  cudaMalloc(&d_input,N*sizeof(float));
+  cudaMalloc(&d_output,N*sizeof(float));   
   
 /*	    
   if(cudaMalloc(&d_input, sizeof(&h_input))   != cudaSuccess ) 
@@ -187,7 +187,7 @@ int main (int argc, char **argv)
   
   //timer for memory copy to device
   long long GPU_copy_to_device = start_timer();
-  cudaMemcpy(d_input, h_input, sizeof(&h_input), cudaMemcpyHostToDevice);	
+  cudaMemcpy(d_input, h_input, N*sizeof(float), cudaMemcpyHostToDevice);	
   long long GPU_memcpy_allocation_result = stop_timer(GPU_copy_to_device, "\nGPU Memory Copy to Device");
 	
   //timer and execution of our GPU Kernel	
@@ -198,7 +198,7 @@ int main (int argc, char **argv)
   
   //timer for memory copy back to host
   long long GPU_copy_to_host = start_timer();
-  cudaMemcpy(h_gpu_result, d_output, sizeof(&h_input), cudaMemcpyDeviceToHost);
+  cudaMemcpy(h_gpu_result, d_output, N*sizeof(float), cudaMemcpyDeviceToHost);
   long long GPU_tohost_copy_result = stop_timer(GPU_copy_to_host, "\nGPU Memory Copy to Host");
 	
   //printing total GPU run time

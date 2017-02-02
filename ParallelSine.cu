@@ -168,8 +168,8 @@ int main (int argc, char **argv)
 	
    //timer for memory allocation	
   long long GPU_mem_allocation = start_timer();
-  cudaMalloc(&d_input, sizeof(&h_input);
-  cudaMalloc(&d_output, sizeof(&h_input);   
+  cudaMalloc(&d_input, sizeof(&h_input));
+  cudaMalloc(&d_output, sizeof(&h_input));   
   
 /*	    
   if(cudaMalloc(&d_input, sizeof(&h_input))   != cudaSuccess ) 

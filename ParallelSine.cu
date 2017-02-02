@@ -145,8 +145,7 @@ int main (int argc, char **argv)
 
   float *d_input = 0;
   float *d_output = 0;
-  float *d_input;
-  float *d_output;	
+ 	
   //Initialize data on CPU
   int i;
   for (i=0; i<N; i++)

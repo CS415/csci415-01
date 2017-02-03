@@ -190,10 +190,10 @@ int main (int argc, char **argv)
     errorCount = errorCount + 1;
   }
   if (errorCount > 0)
-    printf("Result comparison failed.\n Total Errors: %d\n", errorCount);
+    printf("\nResult comparison failed.\n Total Errors: %d\n", errorCount);
   
   else
-    printf("Result comparison passed.\n");
+    printf("\nResult comparison passed.\n");
 
   // Cleaning up memory
   free(h_input);

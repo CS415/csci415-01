@@ -168,10 +168,10 @@ int main (int argc, char **argv)
   long long GPU_copy_to_device_result = stop_timer(GPU_copy_to_device, "\nGPU Memory Copy to Device");
 	
   //timer and execution of our GPU Kernel	
-  long long GPU_start_time = start_timer();
+  long long GPU_kernel_start_time = start_timer();
   sine_parallel <<<(N/block_size + 1),block_size>>>(d_input, d_output);
   cudaThreadSynchronize();
-  long long GPU_end_time = stop_timer(GPU_start_time, "\nGPU Kernel Run Time");
+  long long GPU_kernel_end_time = stop_timer(GPU_kernel_start_time, "\nGPU Kernel Run Time");
   
   //timer for memory copy back to host
   long long GPU_copy_to_host = start_timer();

@@ -158,8 +158,8 @@ int main (int argc, char **argv)
 	
   //timer for memory allocation	
   long long GPU_mem_allocation = start_timer();
-  cudaMalloc(&d_input,N*sizeof(float));
-  cudaMalloc(&d_output,N*sizeof(float));   
+  cudaMalloc((void**) &d_input,N*sizeof(float));
+  cudaMalloc((void**) &d_output,N*sizeof(float));   
   long long GPU_mem_allocation_result = stop_timer(GPU_mem_allocation, "\nGPU Memory Allocation");	
   
   //timer for memory copy to device

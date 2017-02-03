@@ -179,7 +179,7 @@ int main (int argc, char **argv)
   long long GPU_copy_to_host_result = stop_timer(GPU_copy_to_host, "GPU Memory Copy to Host");
 	
   //printing total GPU run time
-  long long Result_of_GPU_run_time = stop_timer(Total_GPU_run_Time, "\nTotal GPU Run Time\n");
+  long long Result_of_GPU_run_time = stop_timer(Total_GPU_run_Time, "\nTotal GPU Run Time");
   //END: GPU implementation
   
   // Checking to make sure the CPU and GPU results match - Do not modify

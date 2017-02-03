@@ -43,12 +43,8 @@ void sine_serial(float *input, float *output)
 }
 
 
-// kernel function (CUDA device)
-// TODO: Implement your graphics kernel here. See assignment instructions for method information
 const int block_size = 1024;
-// typedef struct{
-//  int N;
-// }
+// kernel function (CUDA device)
 __global__ void sine_parallel(float *input, float *output)
 {
   /*
@@ -81,6 +77,7 @@ __global__ void sine_parallel(float *input, float *output)
       {
       }
 }
+
 // BEGIN: timing and error checking routines (do not modify)
 
 // Returns the current time in microseconds
@@ -139,10 +136,9 @@ int main (int argc, char **argv)
   float *h_gpu_result = (float*)malloc(N*sizeof(float));
 
   float *d_input;
-  float *d_output;	
-  //BEGIN: CPU implementation (do not modify)
-  
- 	
+  float *d_output;
+	
+  //BEGIN: CPU implementation (do not modify)	
   //Initialize data on CPU
   int i;
   for (i=0; i<N; i++)
@@ -156,56 +152,46 @@ int main (int argc, char **argv)
   long long CPU_time = stop_timer(CPU_start_time, "\nCPU Run Time");
   //END: CPU implementation (do not modify)
 
-
-  //TODO: Prepare and run your kernel, make sure to copy your results back into h_gpu_result and display your timing results
-   
+  //BEGIN: GPU implementation 
   //timer to calculate total GPU run time	
   long long Total_GPU_run_Time= start_timer();
 	
-   //timer for memory allocation	
+  //timer for memory allocation	
   long long GPU_mem_allocation = start_timer();
   cudaMalloc(&d_input,N*sizeof(float));
   cudaMalloc(&d_output,N*sizeof(float));   
-  
   long long GPU_mem_allocation_result = stop_timer(GPU_mem_allocation, "\nGPU Memory Allocation");	
   
   //timer for memory copy to device
   long long GPU_copy_to_device = start_timer();
   cudaMemcpy(d_input, h_input, N*sizeof(float), cudaMemcpyHostToDevice);	
-  long long GPU_memcpy_allocation_result = stop_timer(GPU_copy_to_device, "\nGPU Memory Copy to Device");
+  long long GPU_copy_to_device_result = stop_timer(GPU_copy_to_device, "\nGPU Memory Copy to Device");
 	
   //timer and execution of our GPU Kernel	
   long long GPU_start_time = start_timer();
   sine_parallel <<<(N/block_size + 1),block_size>>>(d_input, d_output);
   cudaThreadSynchronize();
-  long long GPU_time = stop_timer(GPU_start_time, "\nGPU Kernel Run Time");
+  long long GPU_end_time = stop_timer(GPU_start_time, "\nGPU Kernel Run Time");
   
   //timer for memory copy back to host
   long long GPU_copy_to_host = start_timer();
   cudaMemcpy(h_gpu_result, d_output, N*sizeof(float), cudaMemcpyDeviceToHost);
-  long long GPU_tohost_copy_result = stop_timer(GPU_copy_to_host, "\nGPU Memory Copy to Host");
+  long long GPU_copy_to_host_result = stop_timer(GPU_copy_to_host, "\nGPU Memory Copy to Host");
 	
   //printing total GPU run time
   long long Result_of_GPU_run_time = stop_timer(Total_GPU_run_Time, "\nTotal GPU Run Time");
-  
+  //END: GPU implementation
   
   // Checking to make sure the CPU and GPU results match - Do not modify
   int errorCount = 0;
-  float cpusum = 0.0f;
-  float gpusum = 0.0f;
   for (i=0; i<N; i++)
   {
     if (abs(h_cpu_result[i]-h_gpu_result[i]) > 1e-6)
-      errorCount = errorCount + 1;
-    cpusum += h_cpu_result[i];
-    gpusum += h_gpu_result[i];
+    errorCount = errorCount + 1;
   }
   if (errorCount > 0)
-  {
-    printf("CPU result sum: %f\n", cpusum);
-    printf("GPU result sum: %f\n", gpusum);
     printf("Result comparison failed.\n Total Errors: %d\n", errorCount);
-  }
+  
   else
     printf("Result comparison passed.\n");
 
